@@ -24,12 +24,29 @@ howl.aux.lpeg_lexer ->
   multi_raw_str = span "'''", "'''"
   string  = c 'string', any {dq_str, raw_str, multi_raw_str, multi_dq_str}
 
-
   -- Numbers.
   number = c 'number', any {
     (float + '_')^1, -- float with underscore
     (digit + '_')^1 --  int with underscore
   }
+
+  -- Datetime.
+  timestamp = c 'timestamp',
+    digit^-4 * -- year
+    '-' * digit^-2 * -- month
+    '-' * digit^-2 * -- day
+    ( (S' \t'^1 + S'tT')^-1 * -- separator
+      digit^-2 * -- hour
+      ':' * digit^-2 * -- minute
+      ':' * digit^-2 * -- second
+      ('.' * digit^0)^-1 * -- fraction
+      ( 'Z' + -- timezone
+        S' \t'^0 *
+        S'-+' *
+        digit^-2 *
+        (':' * digit^-2)^-1
+      )^-1
+    )^-1
 
   -- Keywords.
   keyword = c 'keyword', word {
