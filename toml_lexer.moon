@@ -14,54 +14,30 @@ howl.aux.lpeg_lexer ->
   ws = c 'whitespace', space
 
   -- Comments.
-  line_comment = P'//' * scan_until eol
-  block_comment = span '/*', '*/'
-  comment = c 'comment', any {line_comment, block_comment}
+  line_comment = P'#' * scan_until eol
+  comment = c 'comment', any {line_comment}
 
   -- Strings.
   dq_str = span '"', '"', '\\'
-  raw_str = span '#"', '#'
-  string  = c 'string', any {dq_str, raw_str}
+  raw_str = span "'", "'"
+  multi_dq_str = span '"""', '"""', '\\'
+  multi_raw_str = span "'''", "'''"
+  string  = c 'string', any {dq_str, raw_str, multi_raw_str, multi_dq_str}
 
 
   -- Numbers.
   number = c 'number', any {
-    float,
-    hexadecimal,
-    octal,
-    '0b' * (R'01' + '_')^1,
-    (digit + '_')^1 -- decimal integer
+    (float + '_')^1, -- float with underscore
+    (digit + '_')^1 --  int with underscore
   }
 
   -- Keywords.
   keyword = c 'keyword', word {
-    'abstract',   'alignof',    'as',       'become',   'box',
-    'break',      'const',      'continue', 'crate',    'do',
-    'else',       'enum',       'extern',   'false',    'final',
-    'fn',         'for',        'if',       'impl',     'in',
-    'let',        'loop',       'macro',    'match',    'mod',
-    'move',       'mut',        "offsetof", 'override', 'priv',
-    'proc',       'pub',        'pure',     'ref',      'return',
-    'Self',       'self',       'sizeof',   'static',   'struct',
-    'super',      'trait',      'true',     'type',     'typeof',
-    'unsafe',     'unsized',    'use',      'virtual',  'where',
-    'while',      'yield'
+    'true', 'false'
   }
 
-  -- Library Types.
-  library = R'AZ' * (R'az' + digit)^1
-
-  -- Lifetimes.
-  lifetime = "'" * ident
-
-  -- Primitive Types.
-  primitive = word {
-    'bool', 'isize', 'usize', 'char', 'str',
-    'u8', 'u16', 'u32', 'u64', 'i8', 'i16', 'i32', 'i64',
-    'f32','f64',
-  }
-
-  type = c 'type', any {library, lifetime, primitive}
+  -- Table.
+  local tab = c 'table', S'['^1 * (ident + S'.')^1 * S']'^1
 
   -- Identifiers.
   identifier = c 'identifer', ident
@@ -69,32 +45,17 @@ howl.aux.lpeg_lexer ->
   -- Operators.
   operator = c 'operator', S'+-/*%<>!=`^~@&|?#~:;,.()[]{}'
 
-  -- Attributes.
-  attribute = (P'#![' + P'#[') * scan_until(eol + P']')
-
-  -- Syntax extensions.
-  extension = ident * S'!'
-
-  -- Character.
-  char = span("'", "'", '\\')
-
-  preproc = c 'preproc', attribute
-  special = c 'special', any { extension }
-  constant = c 'constant', char
-
   P {
     'all'
 
     all: any {
-      preproc,
       comment,
-      string,
-      type,
       keyword,
-      special,
-      operator,
+      timestamp,
+      string,
       number,
-      constant,
+      tab,
+      operator,
       identifier,
     }
   }
