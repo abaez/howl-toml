@@ -22,7 +22,12 @@ howl.aux.lpeg_lexer ->
   raw_str = span "'", "'"
   multi_dq_str = span '"""', '"""', '\\'
   multi_raw_str = span "'''", "'''"
-  string  = c 'string', any {dq_str, raw_str, multi_raw_str, multi_dq_str}
+  string  = c 'string', any {
+    dq_str,
+    raw_str,
+    multi_raw_str,
+    multi_dq_str
+  }
 
   -- Numbers.
   number = c 'number', any {
@@ -54,10 +59,10 @@ howl.aux.lpeg_lexer ->
   }
 
   -- Table.
-  local tab = c 'table', S'['^1 * (ident + S'.')^1 * S']'^1
+  tab = c 'preproc', S'['^1 * (ident + S'.')^1 * S']'^1
 
   -- Identifiers.
-  identifier = c 'identifer', ident
+  identifier = c 'identifier', ident
 
   -- Operators.
   operator = c 'operator', S'+-/*%<>!=`^~@&|?#~:;,.()[]{}'
