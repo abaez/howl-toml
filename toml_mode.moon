@@ -7,12 +7,13 @@
 
 {
   lexer: bundle_load('toml_lexer')
-  comment_syntax: {'//', '/*', '*/'}
+  comment_syntax: '#'
   auto_pairs: {
     '(': ')'
     '[': ']'
     '{': '}'
     '"': '"'
+    "'": "'"
   }
 
   default_config:
