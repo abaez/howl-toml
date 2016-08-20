@@ -22,7 +22,7 @@ hg clone https://a_baez@bitbucket.org/a_baez/howl-toml \
   ~/.howl/bundles/toml
 ```
 And that's it! You are good to go with having a lexer for [toml] on [howl]!
-[toml]: http://www.toml-lang.org/
+[toml]: https://github.com/toml-lang/toml
 [ta-toml]: https://bitbucket.org/a_baez/ta-toml
 [howl]: https://howl.io
 [textadept]: http://foicica.com/textadept
