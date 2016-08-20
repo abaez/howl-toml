@@ -5,6 +5,11 @@
 -- @license MIT (see LICENSE)
 -- @module mode
 
+import style from howl.ui
+
+style.define 'tab', 'preproc'
+style.define 'timestamp', 'constant'
+
 {
   lexer: bundle_load('toml_lexer')
   comment_syntax: '#'

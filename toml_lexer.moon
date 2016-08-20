@@ -59,7 +59,7 @@ howl.aux.lpeg_lexer ->
   }
 
   -- Table.
-  tab = c 'preproc', S'['^1 * (ident + S'.')^1 * S']'^1
+  tab = c 'tab', S'['^1 * (ident + S'.')^1 * S']'^1
 
   -- Identifiers.
   identifier = c 'identifier', ident
