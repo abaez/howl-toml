@@ -5,7 +5,7 @@
 -- @license MIT (see LICENSE)
 -- @module toml
 
-howl.aux.lpeg_lexer ->
+howl.util.lpeg_lexer ->
   c = capture
   -- shorthand for lexer.word
   ident = (alpha + '_')^1 * (alpha + digit + '_')^0
